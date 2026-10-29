@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'detailChat.dart';
 
 void main() {
   runApp(const MyApp());
@@ -43,35 +44,35 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final List<Map<String, dynamic>> chats = [
     {
-      'name': 'Duns',
-      'message': 'haii duns juara boxing dunia 🥊',
+      'name': 'Alvin',
+      'message': 'Buru Ehhhh, Lama banget buset bocah',
       'time': '16:30',
       'unread': 3,
       'color': Colors.blue,
     },
     {
-      'name': 'Fadlan',
-      'message': 'Halo, apa kabar?',
+      'name': 'Ghiyas',
+      'message': 'Gas, Maen hayu',
       'time': '16:10',
       'unread': 2,
       'color': Colors.orange,
     },
     {
-      'name': 'Andi',
+      'name': 'Ubes',
       'message': 'Nanti jadi pergi?',
       'time': '15:45',
       'unread': 0,
       'color': Colors.purple,
     },
     {
-      'name': 'Budi',
-      'message': 'Oke siap 👍',
+      'name': 'Toto',
+      'message': 'Oke siap',
       'time': '15:20',
       'unread': 1,
       'color': Colors.red,
     },
     {
-      'name': 'Citra',
+      'name': 'Iqbal',
       'message': 'Jangan lupa tugasnya ya',
       'time': '14:50',
       'unread': 0,
@@ -93,14 +94,14 @@ class _HomePageState extends State<HomePage> {
     },
     {
       'name': 'Fajar',
-      'message': 'Makasih ya 👍',
+      'message': 'Makasih ya',
       'time': '13:15',
       'unread': 2,
       'color': Colors.deepOrange,
     },
     {
-      'name': 'Gilang',
-      'message': 'Gas latihan nanti 🔥',
+      'name': 'Galang',
+      'message': 'Gas latihan nanti',
       'time': '12:50',
       'unread': 0,
       'color': Colors.green,
@@ -135,7 +136,7 @@ class _HomePageState extends State<HomePage> {
     },
     {
       'name': 'Lutfi',
-      'message': 'Sampai jumpa 👋',
+      'message': 'Sampai jumpa',
       'time': '10:10',
       'unread': 1,
       'color': Colors.lightBlue,
@@ -160,16 +161,15 @@ class _HomePageState extends State<HomePage> {
     // CHAT KE-17
     {
       'name': 'Salsa',
-      'message': 'Jangan lupa datang ya 😊',
+      'message': 'Jangan lupa datang ya',
       'time': '08:50',
       'unread': 0,
       'color': Colors.pinkAccent,
     },
 
-    // CHAT KE-18
     {
       'name': 'Yoga',
-      'message': 'Mantap sekali 🔥',
+      'message': 'Mantap sekali',
       'time': '08:20',
       'unread': 2,
       'color': Colors.greenAccent,
@@ -250,82 +250,22 @@ class _HomePageState extends State<HomePage> {
   Widget halamanChat() {
     return Column(
       children: [
-        // SEARCH BOX
-        Container(
-          margin: const EdgeInsets.fromLTRB(15, 15, 15, 10),
+        const SizedBox(height: 40),
 
-          padding: const EdgeInsets.symmetric(horizontal: 15),
-
-          height: 48,
-
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(25),
-
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.08),
-                blurRadius: 6,
-                offset: const Offset(0, 3),
-              ),
-            ],
-          ),
-
-          child: const Row(
-            children: [
-              Icon(Icons.search, color: Colors.grey),
-
-              SizedBox(width: 10),
-
-              Text(
-                'Cari chat...',
-                style: TextStyle(color: Colors.grey, fontSize: 14),
-              ),
-            ],
-          ),
-        ),
-
-        // FILTER
-        SizedBox(
-          height: 40,
-
-          child: ListView(
-            scrollDirection: Axis.horizontal,
-
-            padding: const EdgeInsets.symmetric(horizontal: 15),
-
-            children: [
-              filterButton('Semua', true),
-
-              filterButton('Belum dibaca', false),
-
-              filterButton('Grup', false),
-            ],
-          ),
-        ),
-
-        const SizedBox(height: 5),
-
-        // =================================================
-        // LIST CHAT
-        // =================================================
         Expanded(
-          child: ListView.builder(
-            padding: const EdgeInsets.only(bottom: 80, top: 5),
-
-            itemCount: chats.length,
-
-            itemBuilder: (context, index) {
-              final chat = chats[index];
-
-              return itemChat(
-                nama: chat['name'],
-                pesan: chat['message'],
-                waktu: chat['time'],
-                jumlah: chat['unread'],
-                warna: chat['color'],
-              );
-            },
+          child: SingleChildScrollView(
+            padding: const EdgeInsetsGeometry.only(bottom: 80, top: 5),
+            child: Column(
+              children: [
+                itemChat(
+                  nama: chats[0]['name'],
+                  pesan: chats[0]['message'],
+                  waktu: chats[0]['time'],
+                  jumlah: chats[0]['unread'],
+                  warna: chats[0]['color'],
+                ),
+              ],
+            ),
           ),
         ),
       ],
@@ -338,7 +278,7 @@ class _HomePageState extends State<HomePage> {
 
   Widget filterButton(String text, bool aktif) {
     return Container(
-      margin: const EdgeInsets.only(right: 8),
+      margin: const EdgeInsetsGeometry.only(right: 8),
 
       padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
 
@@ -375,24 +315,31 @@ class _HomePageState extends State<HomePage> {
     required int jumlah,
     required Color warna,
   }) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-
-      decoration: BoxDecoration(
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+      child: Material(
         color: Colors.white,
-
         borderRadius: BorderRadius.circular(15),
-
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 5,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-
-      child: ListTile(
+        child: InkWell(
+          borderRadius: BorderRadius.circular(15),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const Detailchat()),
+            );
+          },
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(15),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.05),
+                  blurRadius: 5,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+            child: ListTile(
         contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
 
         // =================================================
@@ -425,7 +372,7 @@ class _HomePageState extends State<HomePage> {
         ),
 
         subtitle: Padding(
-          padding: const EdgeInsets.only(top: 5),
+          padding: const EdgeInsetsGeometry.only(top: 5),
 
           child: Text(
             pesan,
@@ -483,6 +430,9 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       ),
+          ),
+        ),
+      ),
     );
   }
 
@@ -492,7 +442,7 @@ class _HomePageState extends State<HomePage> {
 
   Widget halamanStatus() {
     return ListView(
-      padding: const EdgeInsets.only(top: 10),
+      padding: const EdgeInsetsGeometry.only(top: 10),
 
       children: [
         const Padding(
@@ -609,7 +559,7 @@ class _HomePageState extends State<HomePage> {
 
   Widget halamanCall() {
     return ListView(
-      padding: const EdgeInsets.only(top: 10),
+      padding: const EdgeInsetsGeometry.only(top: 10),
 
       children: [
         const Padding(
