@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'detailChat.dart';
+import 'detailchat.dart';
 
 void main() {
   runApp(const MyApp());
