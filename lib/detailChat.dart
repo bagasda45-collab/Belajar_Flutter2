@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'message.dart';
 
 class Detailchat extends StatefulWidget {
   const Detailchat({super.key});
@@ -8,26 +9,39 @@ class Detailchat extends StatefulWidget {
 }
 
 class _DetailchatState extends State<Detailchat> {
-  final TextEditingController _messageController = TextEditingController();
-  final List<String> _messages = [
-    'Halo, sudah sampai?',
-    'Sudah, sebentar lagi masuk.',
-    'Oke, aku tunggu di depan.',
-    'Siap, sebentar lagi sampai.',
+  final TextEditingController _chatController = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
+
+  final List<Message> _messages = [
+    const Message(text: 'Hi!', isMe: false),
+    const Message(text: 'Bagaimana belajar Flutter?', isMe: false),
+    const Message(text: 'Mudah, cuma widget-widget saja nih.', isMe: false),
   ];
 
   @override
   void dispose() {
-    _messageController.dispose();
+    _chatController.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
   void _sendMessage() {
-    final message = _messageController.text.trim();
-    if (message.isEmpty) return;
+    if (_chatController.text.trim().isEmpty) return;
+
     setState(() {
-      _messages.add(message);
-      _messageController.clear();
+      _messages.add(Message(text: _chatController.text, isMe: true));
+    });
+
+    _chatController.clear();
+
+    Future.delayed(const Duration(milliseconds: 100), () {
+      if (_scrollController.hasClients) {
+        _scrollController.animateTo(
+          _scrollController.position.maxScrollExtent,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+        );
+      }
     });
   }
 
@@ -75,35 +89,27 @@ class _DetailchatState extends State<Detailchat> {
           children: [
             Expanded(
               child: ListView.builder(
-                padding: const EdgeInsets.all(14),
+                controller: _scrollController,
+                 padding: const EdgeInsets.all(20),
                 itemCount: _messages.length,
                 itemBuilder: (context, index) {
-                  final isMine = index.isOdd;
+                   final msg = _messages[index];
                   return Align(
-                    alignment: isMine
-                        ? Alignment.centerRight
-                        : Alignment.centerLeft,
+                     alignment: msg.isMe
+                         ? Alignment.centerRight
+                         : Alignment.centerLeft,
                     child: Container(
                       constraints: BoxConstraints(
                         maxWidth: MediaQuery.sizeOf(context).width * 0.78,
                       ),
-                      margin: const EdgeInsets.only(bottom: 8),
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 9,
-                      ),
+                       margin: const EdgeInsets.symmetric(vertical: 5),
+                       padding: const EdgeInsets.all(10),
                       decoration: BoxDecoration(
-                        color: isMine ? const Color(0xFFD9FDD3) : Colors.white,
-                        borderRadius: BorderRadius.only(
-                          topLeft: const Radius.circular(10),
-                          topRight: const Radius.circular(10),
-                          bottomLeft: Radius.circular(isMine ? 10 : 2),
-                          bottomRight: Radius.circular(isMine ? 2 : 10),
-                        ),
+                         color: msg.isMe ? Colors.green[100] : Colors.green[300],
+                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Text(
-                        _messages[index],
-                        style: const TextStyle(fontSize: 15),
+                         msg.text,
                       ),
                     ),
                   );
@@ -119,31 +125,18 @@ class _DetailchatState extends State<Detailchat> {
                   children: [
                     Expanded(
                       child: TextField(
-                        controller: _messageController,
-                        minLines: 1,
-                        maxLines: 4,
-                        textInputAction: TextInputAction.newline,
-                        decoration: InputDecoration(
-                          hintText: 'Ketik pesan',
-                          filled: true,
-                          fillColor: Colors.white,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(24),
-                            borderSide: BorderSide.none,
-                          ),
-                        ),
+                         controller: _chatController,
+                         decoration: const InputDecoration(
+                           hintText: 'Tulis pesan...',
+                           border: OutlineInputBorder(),
+                         ),
+                         onSubmitted: (_) => _sendMessage(),
                       ),
                     ),
-                    const SizedBox(width: 6),
-                    CircleAvatar(
-                      radius: 24,
-                      backgroundColor: const Color(0xFF25D366),
-                      child: IconButton(
-                        onPressed: _sendMessage,
-                        color: Colors.white,
-                        icon: const Icon(Icons.send),
-                      ),
-                    ),
+                     IconButton(
+                       onPressed: _sendMessage,
+                       icon: const Icon(Icons.send),
+                     ),
                   ],
                 ),
               ),
